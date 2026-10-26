@@ -8,7 +8,6 @@ from . import splash
 
 
 RESET = "\033[0m"
-BOLD  = "\033[1m"
 DIM   = "\033[2m"
 CYAN  = "\033[96m"
 GREEN = "\033[92m"
