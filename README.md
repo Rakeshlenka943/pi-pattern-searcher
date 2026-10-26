@@ -26,7 +26,7 @@ Self-tuning · Cross-platform · Benchmarks your CPU before it searches a single
 
 [**🚀 Try it in your browser**](https://codespaces.new/Rakeshlenka943/pi-pattern-searcher)
 ·
-[**⚡ Quickstart**](#-quickstart)
+[**⚡ Quickstart**](#-quickstart--any-machine)
 ·
 [**🎮 Usage**](#-usage)
 ·
@@ -59,19 +59,84 @@ It is not a wrapper around a 100 MB text file. It computes π on demand, measure
 | ♾️ | **Unlimited mode** | Doubling search with RAM-safe ceiling |
 | 🎨 | **Rotating ASCII banner** | Five π artworks, drawn at random each launch |
 
-## 🚀 Quickstart
+## 🚀 Quickstart — any machine
+
+**The 90% case — works identically on Linux, Windows 11, and macOS:**
 
 ```bash
+git clone https://github.com/Rakeshlenka943/pi-pattern-searcher.git
+cd pi-pattern-searcher
+python3 -m venv .venv
+source .venv/bin/activate           # Linux / macOS
+# .venv\Scripts\Activate.ps1        # Windows PowerShell (see collapsible below)
+pip install -e ".[dev]"
+pi-search
+```
+
+<details>
+<summary><b>📦 Linux prerequisites — Debian/Ubuntu/Mint · Fedora · Arch</b></summary>
+
+<br/>
+
+```bash
+# Debian / Ubuntu / Linux Mint
 sudo apt install -y python3-venv python3-dev build-essential \
                     libgmp-dev libmpfr-dev libmpc-dev pkg-config
 
-git clone https://github.com/Rakeshlenka943/pi-pattern-searcher.git
-cd pi-pattern-searcher
-python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+# Fedora
+sudo dnf install -y python3-devel gcc gmp-devel mpfr-devel libmpc-devel pkg-config
 
-pi-search
+# Arch / Manjaro
+sudo pacman -S --needed python gcc gmp mpfr libmpc pkg-config
 ```
+
+</details>
+
+<details>
+<summary><b>🪟 Windows 11 prerequisites</b></summary>
+
+<br/>
+
+1. Install **Python 3.12** from [python.org/downloads](https://www.python.org/downloads/) — tick **"Add python.exe to PATH"** during setup
+2. Install **Git** from [git-scm.com/download/win](https://git-scm.com/download/win)
+3. Open **PowerShell** (not cmd) and run the common flow above — `.venv\Scripts\Activate.ps1` replaces the `source` line
+4. If PowerShell refuses with a security error: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then retry — or use `cmd.exe` and `.venv\Scripts\activate.bat`
+
+No C compiler needed on Windows — the `gmpy2` wheel bundles GMP.
+
+</details>
+
+<details>
+<summary><b>🍎 macOS 12+ prerequisites</b></summary>
+
+<br/>
+
+```bash
+xcode-select --install                        # installs clang + git
+brew install python gmp mpfr libmpc pkg-config
+```
+
+No Homebrew yet? One line installs it:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Then run the common flow above.
+
+</details>
+
+### 🔧 If something breaks
+
+| Error | Fix |
+|---|---|
+| `gmpy2` fails to build | **Linux:** install `libgmp-dev libmpfr-dev libmpc-dev` · **macOS:** `brew install gmp mpfr libmpc` · **Windows:** use Python 3.12 from python.org (wheels bundle GMP, no compiler needed) |
+| `pi-search: command not found` | `hash -r` to refresh bash's cache, or run `python -m pi_search.cli` as fallback |
+| `externally-managed-environment` | You skipped the venv — run `python3 -m venv .venv` and activate it first |
+| PowerShell "execution policy" error (Windows) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then retry |
+| First run feels slow (~2 s) | One-time micro-benchmark — later runs read the cache from `~/.pi_search_config.json` |
+| `Could not resolve host: github.com` | A VPN/DNS tool (WARP, Speedify, Tailscale) is intercepting — disconnect it, or restart `NetworkManager` |
+| `No module named pi_search` | You're outside the venv, or the `pip install -e` step didn't run |
 
 ## 🎮 Usage
 
