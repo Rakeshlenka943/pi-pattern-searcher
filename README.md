@@ -9,8 +9,9 @@
 Find any number or word hidden inside the digits of π.
 
 <p>
+  <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/actions/workflows/test.yml"><img src="https://github.com/Rakeshlenka943/pi-pattern-searcher/actions/workflows/test.yml/badge.svg?branch=main" alt="tests workflow status" /></a>
   <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/stargazers"><img src="https://img.shields.io/github/stars/Rakeshlenka943/pi-pattern-searcher?style=for-the-badge&logo=github" alt="GitHub stars" /></a>
-  <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/Rakeshlenka943/pi-pattern-searcher/ci.yml?branch=main&style=for-the-badge" alt="CI" /></a>
+  <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/Rakeshlenka943/pi-pattern-searcher/test.yml?branch=main&style=for-the-badge" alt="CI" /></a>
   <a href="https://pypi.org/project/pi-search/" target="_blank"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
 </p>
@@ -57,6 +58,29 @@ Match length: 5
 Backend: c_ext
 Time: 0.42s
 ```
+
+## CI workflow
+
+The project runs tests on a matrix of operating systems and Python versions:
+
+```mermaid
+flowchart LR
+    A[Push / Pull Request] --> B[Checkout repository]
+    B --> C[Setup Python 3.10 and 3.12]
+    C --> D[Install dependencies]
+    D --> E{Matrix runner}
+    E --> F[ubuntu-latest]
+    E --> G[macos-latest]
+    E --> H[windows-latest]
+    F --> I[pytest -q]
+    G --> I
+    H --> I
+    I --> J[Test results]
+```
+
+The actual GitHub Actions workflow is in `.github/workflows/test.yml` and includes macOS, Linux, and Windows in the same test matrix.
+
+> Note: the workflow badge and matrix status are tied to the workflow file name. The repo uses `test.yml`, so the badge URL must point to that file, not a non-existent `ci.yml` workflow.
 
 ## Installation
 
