@@ -2,205 +2,188 @@
 
 <img src="assets/banner.svg" alt="Pi Pattern Searcher" width="100%" />
 
-<br/><br/>
-
-**Find any number — or any word — hidden inside the digits of π.**
-
-Self-tuning · Cross-platform · Benchmarks your CPU before it searches a single digit
-
-<a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=500&size=21&pause=1300&color=38BDF8&center=true&vCenter=true&width=780&lines=3.14159265358979323846264338327950288...;pi-search+14159;pi-search+--word+Aman;pi-search+--unlimited+--progress;it+picks+the+fastest+backend+for+your+machine" alt="Typing SVG" /></a>
-
 <br/>
 
-![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-4EAA25?logo=linux&logoColor=white)
-![Backends](https://img.shields.io/badge/backends-gmpy2%20%7C%20mpmath%20%7C%20spigot-orange)
-![Algorithms](https://img.shields.io/badge/search-KMP%20%7C%20Rabin--Karp%20%7C%20naive-8b5cf6)
-![License](https://img.shields.io/badge/license-MIT-blue)
-<br/>
+# Pi Pattern Searcher
 
-[**🚀 Try it in your browser**](https://codespaces.new/Rakeshlenka943/pi-pattern-searcher)
-·
-[**⚡ Quickstart**](#-quickstart--any-machine)
-·
-[**🎮 Usage**](#-usage)
-·
-[**🧠 How it tunes itself**](#-how-it-tunes-itself)
-·
-[**🗺️ Roadmap**](#%EF%B8%8F-roadmap)
+Find any number or word hidden inside the digits of π.
+
+<p>
+  <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/stargazers"><img src="https://img.shields.io/github/stars/Rakeshlenka943/pi-pattern-searcher?style=for-the-badge&logo=github" alt="GitHub stars" /></a>
+  <a href="https://github.com/Rakeshlenka943/pi-pattern-searcher/actions"><img src="https://img.shields.io/github/actions/workflow/status/Rakeshlenka943/pi-pattern-searcher/ci.yml?branch=main&style=for-the-badge" alt="CI" /></a>
+  <a href="https://pypi.org/project/pi-search/" target="_blank"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="MIT License" /></a>
+</p>
+
+<a href="https://codespaces.new/Rakeshlenka943/pi-pattern-searcher">🚀 Open in GitHub Codespaces</a>
 
 </div>
 
 ---
 
-`pi-search` generates π with the fastest backend your machine can actually run, searches it with the right algorithm for your pattern length, and then tells you the probability your pattern *should* have appeared by now.
+A fast, playful command-line tool that searches the digits of π for numbers, words, and patterns — without loading a giant text file into memory.
 
-It is not a wrapper around a 100 MB text file. It computes π on demand, measures your hardware, caches the winning configuration, and adapts when it has to.
+It tunes itself to your machine, picks the best backend, and searches efficiently using a smart mix of algorithms.
 
-> [!IMPORTANT]
-> **v0.3 — C extension is live.** This release adds a GMP-backed Chudnovsky binary-splitting backend written in C, auto-compiled via `ctypes` on first run. Measured on a 2018 dual-core i3-8130U: **3.7× faster than `mpmath` at 1M digits**, auto-selected by the tuner. No `gcc`? Falls back to `mpmath` silently. See [Performance](#-performance) for the real numbers.
+## Why this project is cool
 
-> [!TIP]
-> **New here?** Click **Try it in your browser** above. It spins up a free cloud IDE with the project pre-installed — click the green **Create codespace** button and you're searching π in about 30 seconds. No local setup.
+Because π is infinite, intriguing, and full of patterns.
 
-## ✨ Features
+This project turns that idea into a practical search tool:
 
-| | Feature | Why it matters |
-|---|---|---|
-| 🔍 | **Search numbers or words** | `pi-search 14159` or `pi-search --word Aman` (ASCII-encoded) |
-| ⚙️ | **Four π backends** | `c_ext` (C/GMP), `gmpy2`, `mpmath`, dependency-free `spigot` — auto-selected |
-| 🚀 | **C extension (v0.3)** | Chudnovsky binary splitting in GMP — **3.7× faster** than `mpmath` at 1M digits, auto-compiled on first use |
-| 🧮 | **Three search algorithms** | Naive (≤4 digits), KMP (≤100), Rabin–Karp (>100) |
-| 🖥️ | **Real hardware detection** | CPU, cores, L1/L2/L3, RAM, AVX2/AVX-512, GPU, compiler |
-| 🎯 | **Micro-benchmarked autotune** | Tunes on *your* machine, caches by fingerprint |
-| 📈 | **Live probability model** | Poisson estimate of `P(seen)` and expected remaining digits |
-| 🖱️ | **Interactive menu** | Kali-style numbered menus when run with no arguments |
-| ♾️ | **Unlimited mode** | Doubling search with RAM-safe ceiling |
-| 🎨 | **Rotating ASCII banner** | Five π artworks, drawn at random each launch |
+- Search for numbers like `14159`
+- Search for words like `Hi` or `Aman`
+- Run on Linux, macOS, and Windows
+- Automatically benchmark your machine and choose the fastest setup
+- Use a compiled C backend when available, with clean fallbacks
 
-## 🚀 Quickstart — any machine
+It feels part math puzzle, part systems project, and part benchmark experiment.
 
-**The 90% case — works identically on Linux, Windows 11, and macOS:**
+## Quick demo
+
+```bash
+pi-search 14159
+pi-search --word Hi
+pi-search 123456 --unlimited
+```
+
+Example output:
+
+```text
+$ pi-search 14159
+Searching digits of π for: 14159
+Found at digit index: 225,073
+Match length: 5
+Backend: c_ext
+Time: 0.42s
+```
+
+## Installation
+
+### Standard setup
 
 ```bash
 git clone https://github.com/Rakeshlenka943/pi-pattern-searcher.git
 cd pi-pattern-searcher
 python3 -m venv .venv
-source .venv/bin/activate           # Linux / macOS
-# .venv\Scripts\Activate.ps1        # Windows PowerShell (see collapsible below)
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\Activate.ps1  # Windows PowerShell
 pip install -e ".[dev]"
 pi-search
 ```
 
-<details>
-<summary><b>📦 Linux prerequisites — Debian/Ubuntu/Mint · Fedora · Arch</b></summary>
+### Dependencies
 
-<br/>
+On Linux, you may need build tools and GMP libraries:
 
 ```bash
-# Debian / Ubuntu / Linux Mint
+# Debian / Ubuntu / Mint
 sudo apt install -y python3-venv python3-dev build-essential \
                     libgmp-dev libmpfr-dev libmpc-dev pkg-config
 
 # Fedora
 sudo dnf install -y python3-devel gcc gmp-devel mpfr-devel libmpc-devel pkg-config
 
-# Arch / Manjaro
+# Arch
 sudo pacman -S --needed python gcc gmp mpfr libmpc pkg-config
 ```
 
-</details>
-
-<details>
-<summary><b>🪟 Windows 11 prerequisites</b></summary>
-
-<br/>
-
-1. Install **Python 3.12** from [python.org/downloads](https://www.python.org/downloads/) — tick **"Add python.exe to PATH"** during setup
-2. Install **Git** from [git-scm.com/download/win](https://git-scm.com/download/win)
-3. Open **PowerShell** (not cmd) and run the common flow above — `.venv\Scripts\Activate.ps1` replaces the `source` line
-4. If PowerShell refuses with a security error: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then retry — or use `cmd.exe` and `.venv\Scripts\activate.bat`
-
-No C compiler needed on Windows — the `gmpy2` wheel bundles GMP. The C extension (`c_ext`) is skipped on Windows (no GMP headers on default installs); `gmpy2` or `mpmath` is used instead.
-
-</details>
-
-<details>
-<summary><b>🍎 macOS 12+ prerequisites</b></summary>
-
-<br/>
+On macOS:
 
 ```bash
-xcode-select --install                        # installs clang + git
+xcode-select --install
 brew install python gmp mpfr libmpc pkg-config
 ```
 
-No Homebrew yet? One line installs it:
+On Windows, install Python 3.10+ from python.org and use the standard venv flow above.
 
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Then run the common flow above.
-
-</details>
-
-### 🔧 If something breaks
-
-| Error | Fix |
-|---|---|
-| `gmpy2` fails to build | **Linux:** install `libgmp-dev libmpfr-dev libmpc-dev` · **macOS:** `brew install gmp mpfr libmpc` · **Windows:** use Python 3.12 from python.org (wheels bundle GMP, no compiler needed) |
-| `pi-search: command not found` | `hash -r` to refresh bash's cache, or run `python -m pi_search.cli` as fallback |
-| `externally-managed-environment` | You skipped the venv — run `python3 -m venv .venv` and activate it first |
-| PowerShell "execution policy" error (Windows) | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, then retry |
-| First run feels slow (~2 s) | One-time micro-benchmark — later runs read the cache from `~/.pi_search_config.json` |
-| `Could not resolve host: github.com` | A VPN/DNS tool (WARP, Speedify, Tailscale) is intercepting — disconnect it, or restart `NetworkManager` |
-| `No module named pi_search` | You're outside the venv, or the `pip install -e` step didn't run |
-
-## 🎮 Usage
+## Usage
 
 ```bash
 pi-search                          # interactive menu
 pi-search 14159                    # find a digit sequence
-pi-search --word Hi                # find "Hi" → 072105
-pi-search 42 --unlimited           # doubling until found or RAM cap
-pi-search 123456 --progress        # live digits/s display
+pi-search --word Hi                # find the ASCII-encoded word "Hi"
+pi-search 42 --unlimited           # keep searching until found or RAM-cap reached
+pi-search 123456 --progress        # show live progress
 pi-search 999999 --save-on-found pi.txt
 ```
 
-## 🧠 How it tunes itself
+## Features
 
-```mermaid
-flowchart TD
-    A[Launch] --> B[Hardware detect]
-    B --> C{Cached config matches<br/>this hardware?}
-    C -->|yes| D[Load cached tune]
-    C -->|no| E[Math prior from L2/L3 and cores]
-    E --> F[Micro-benchmark backends<br/>500K digits each]
-    F --> G[Pick fastest]
-    G --> H[Write ~/.pi_search_config.json]
-    D --> I[Search]
-    H --> I
-```
+- Search any numeric sequence inside π
+- Search ASCII-encoded words as well
+- Auto-select the best backend for your machine
+- Use a compiled C backend for better speed when available
+- Benchmark hardware and cache a winning configuration
+- Supports naive, KMP, and Rabin–Karp algorithms depending on pattern size
+- Includes an interactive menu when run without arguments
+- Works with unlimited search mode for larger pattern searches
+- Includes rotating ASCII banner art and a playful CLI feel
 
-Real cached config on an i3-8130U:
+## How it works
 
-```json
-{
-  "backend": "mpmath",
-  "chunk_size": 262144,
-  "threads": 2,
-  "benchmarked": { "gmpy2": 0.4156, "mpmath": 0.3287 }
-}
-```
+The tool does not read a gigantic static text file.
 
-`262144` = 256 KB = per-core L2 of that CPU. Nothing hardcoded.
+Instead, it:
 
-## ⚡ Performance
+1. Detects your machine and available CPU features
+2. Measures backend performance
+3. Chooses the fastest configuration for your setup
+4. Generates π on demand
+5. Searches with the right algorithm for the pattern length
+6. Reports the match position and confidence estimate
 
-**Intel i3-8130U** (2 cores, 11.6 GB RAM, 2018 laptop), compiled `-O2 -march=x86-64-v2`:
+This makes it lighter, faster, and more adaptive than simply scanning a prebuilt file.
 
-| Digits | `mpmath` | `c_ext` | Speedup |
-|---|---|---|---|
-| 1 M | 2.05 s (0.49 M/s) | **0.55 s (1.81 M/s)** | **3.7×** |
-| 5 M | 4.26 s (1.17 M/s) | **4.08 s (1.23 M/s)** | 1.05× |
+## Performance
 
-The C extension dominates up to ~3M digits — the range where most real searches live. Beyond ~5M, both backends converge because the decimal-string conversion step (O(M(n) log n)) becomes the bottleneck, and GMP and mpmath are equally efficient at that size. **Neither is slow at 5M; both are ~1.2M digits/s.**
+On a test laptop with an Intel i3-8130U, the C backend delivered a clear speedup at the most common sizes:
 
-**How the tuner picks:** the micro-benchmark runs at **500K digits**, inside `c_ext`'s dominant range. That's why `c_ext` wins the default config on this hardware. If you later run 5M+ digit searches, `c_ext` and `mpmath` will perform identically.
+| Digits | mpmath | c_ext | Speedup |
+|---|---:|---:|---:|
+| 1M | 2.05s | 0.55s | 3.7x |
+| 5M | 4.26s | 4.08s | ~1.05x |
 
-Generation is still the bottleneck for both backends — the search kernel (Rabin–Karp over ASCII digits) runs at tens of millions of chars/second and never shows up in these numbers.
+The tuner chooses the fastest available backend based on your hardware and workload.
 
-## 🗺️ Roadmap
+## Why this is useful
 
-- [x] **v0.1** — encoding, KMP + naive, streaming, CLI
-- [x] **v0.2** — hardware detection, autotune, Rabin–Karp, interactive menu, unlimited mode
-- [x] **v0.3** — C extension: GMP + Chudnovsky binary splitting → **3.7× faster at 1M digits**, auto-compiled via ctypes, falls back to mpmath when gcc is absent
-- [ ] **v0.4** — file-cached generation for repeated 100M+ searches
-- [ ] **v0.5** — multithreaded search
-- [ ] **v0.6** — Aho–Corasick multi-pattern
-- [ ] **v1.0** — optional CUDA backend, PyPI release
+This project is great for:
 
-## 📜 License
+- math enthusiasts exploring π
+- algorithm experiments
+- benchmarking code and hardware
+- EDU demos and curious one-off searches
+- browser-free local tooling for number pattern hunting
 
-MIT
+It turns a very abstract mathematical idea into something concrete and searchable.
+
+## Roadmap
+
+- [x] Search numbers and words in π
+- [x] Hardware detection and autotuning
+- [x] FAST C backend using GMP + Chudnovsky generation
+- [x] Interactive CLI menu and unlimited mode
+- [ ] File-cached generation for repeated large searches
+- [ ] Multithreaded search
+- [ ] Aho–Corasick multi-pattern matching
+- [ ] PyPI release and optional CUDA backend
+
+## Contributing
+
+Contributions are welcome.
+
+If you want to add features, improve the tuning logic, improve docs, or optimize the search path, open an issue or submit a pull request.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+Made with curiosity, math, and a little obsession with π.
+
+If this project helped you, give it a star ⭐
+
+[![GitHub stars](https://img.shields.io/github/stars/Rakeshlenka943/pi-pattern-searcher?style=social)](https://github.com/Rakeshlenka943/pi-pattern-searcher/stargazers)
+
