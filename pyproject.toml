@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pi-search"
-version = "0.2.0"
+version = "0.3.0"
 description = "Cross-platform pattern searcher for the digits of pi"
 requires-python = ">=3.10"
 dependencies = [

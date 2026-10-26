@@ -42,6 +42,9 @@ Self-tuning · Cross-platform · Benchmarks your CPU before it searches a single
 
 It is not a wrapper around a 100 MB text file. It computes π on demand, measures your hardware, caches the winning configuration, and adapts when it has to.
 
+> [!IMPORTANT]
+> **v0.3 — C extension is live.** This release adds a GMP-backed Chudnovsky binary-splitting backend written in C, auto-compiled via `ctypes` on first run. Measured on a 2018 dual-core i3-8130U: **3.7× faster than `mpmath` at 1M digits**, auto-selected by the tuner. No `gcc`? Falls back to `mpmath` silently. See [Performance](#-performance) for the real numbers.
+
 > [!TIP]
 > **New here?** Click **Try it in your browser** above. It spins up a free cloud IDE with the project pre-installed — click the green **Create codespace** button and you're searching π in about 30 seconds. No local setup.
 
@@ -50,7 +53,8 @@ It is not a wrapper around a 100 MB text file. It computes π on demand, measure
 | | Feature | Why it matters |
 |---|---|---|
 | 🔍 | **Search numbers or words** | `pi-search 14159` or `pi-search --word Aman` (ASCII-encoded) |
-| ⚙️ | **Three π backends** | `gmpy2`, `mpmath`, dependency-free `spigot` — auto-selected |
+| ⚙️ | **Four π backends** | `c_ext` (C/GMP), `gmpy2`, `mpmath`, dependency-free `spigot` — auto-selected |
+| 🚀 | **C extension (v0.3)** | Chudnovsky binary splitting in GMP — **3.7× faster** than `mpmath` at 1M digits, auto-compiled on first use |
 | 🧮 | **Three search algorithms** | Naive (≤4 digits), KMP (≤100), Rabin–Karp (>100) |
 | 🖥️ | **Real hardware detection** | CPU, cores, L1/L2/L3, RAM, AVX2/AVX-512, GPU, compiler |
 | 🎯 | **Micro-benchmarked autotune** | Tunes on *your* machine, caches by fingerprint |
@@ -102,7 +106,7 @@ sudo pacman -S --needed python gcc gmp mpfr libmpc pkg-config
 3. Open **PowerShell** (not cmd) and run the common flow above — `.venv\Scripts\Activate.ps1` replaces the `source` line
 4. If PowerShell refuses with a security error: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned` once, then retry — or use `cmd.exe` and `.venv\Scripts\activate.bat`
 
-No C compiler needed on Windows — the `gmpy2` wheel bundles GMP.
+No C compiler needed on Windows — the `gmpy2` wheel bundles GMP. The C extension (`c_ext`) is skipped on Windows (no GMP headers on default installs); `gmpy2` or `mpmath` is used instead.
 
 </details>
 
@@ -179,22 +183,24 @@ Real cached config on an i3-8130U:
 
 ## ⚡ Performance
 
-**Intel i3-8130U**, 2 cores, 11.6 GB RAM:
+**Intel i3-8130U** (2 cores, 11.6 GB RAM, 2018 laptop), compiled `-O2 -march=x86-64-v2`:
 
-| Digits | Time | Rate | Peak RAM |
+| Digits | `mpmath` | `c_ext` | Speedup |
 |---|---|---|---|
-| 1 M | ~0.63 s | 1.6 M/s | ~5 MB |
-| 10 M | ~10 s | 1.0 M/s | ~50 MB |
-| 100 M | ~100 s | 1.0 M/s | ~500 MB |
-| 1 B | ~17 min | 1.0 M/s | ~5 GB |
+| 1 M | 2.05 s (0.49 M/s) | **0.55 s (1.81 M/s)** | **3.7×** |
+| 5 M | 4.26 s (1.17 M/s) | **4.08 s (1.23 M/s)** | 1.05× |
 
-Generation is the bottleneck, not search. That's exactly what the roadmap targets.
+The C extension dominates up to ~3M digits — the range where most real searches live. Beyond ~5M, both backends converge because the decimal-string conversion step (O(M(n) log n)) becomes the bottleneck, and GMP and mpmath are equally efficient at that size. **Neither is slow at 5M; both are ~1.2M digits/s.**
+
+**How the tuner picks:** the micro-benchmark runs at **500K digits**, inside `c_ext`'s dominant range. That's why `c_ext` wins the default config on this hardware. If you later run 5M+ digit searches, `c_ext` and `mpmath` will perform identically.
+
+Generation is still the bottleneck for both backends — the search kernel (Rabin–Karp over ASCII digits) runs at tens of millions of chars/second and never shows up in these numbers.
 
 ## 🗺️ Roadmap
 
 - [x] **v0.1** — encoding, KMP + naive, streaming, CLI
 - [x] **v0.2** — hardware detection, autotune, Rabin–Karp, interactive menu, unlimited mode
-- [ ] **v0.3** — C extension: binary-splitting Chudnovsky → target **5–15× faster generation**
+- [x] **v0.3** — C extension: GMP + Chudnovsky binary splitting → **3.7× faster at 1M digits**, auto-compiled via ctypes, falls back to mpmath when gcc is absent
 - [ ] **v0.4** — file-cached generation for repeated 100M+ searches
 - [ ] **v0.5** — multithreaded search
 - [ ] **v0.6** — Aho–Corasick multi-pattern
