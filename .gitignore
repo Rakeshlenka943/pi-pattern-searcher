@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+build/
+dist/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local machine config
+.pi_search_config.json
+*.log
+*.so
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp

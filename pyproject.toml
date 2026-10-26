@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pi-search"
+version = "0.2.0"
+description = "Cross-platform pattern searcher for the digits of pi"
+requires-python = ">=3.10"
+dependencies = [
+    "psutil>=5.9",
+    "gmpy2>=2.1",
+    "mpmath>=1.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4", "py-cpuinfo>=9.0"]
+
+[project.scripts]
+pi-search = "pi_search.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
