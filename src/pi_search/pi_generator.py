@@ -4,6 +4,12 @@ from typing import Iterator
 
 
 def _detect_backend() -> str:
+    try:
+        from .c_ext import build as _cext_build
+        if _cext_build.is_available():
+            return "c_ext"
+    except Exception:
+        pass
     for name in ("gmpy2", "mpmath"):
         try:
             __import__(name)
@@ -69,6 +75,14 @@ def generate_pi(
         return
     if backend == "auto":
         backend = _detect_backend()
+
+    if backend == "c_ext":
+        try:
+            from .c_ext import backend as c_ext_backend
+            yield from c_ext_backend.generate(digits, chunk_size)
+            return
+        except Exception:
+            backend = _detect_backend()
 
     if backend == "spigot":
         yield from _spigot_chunks(digits, chunk_size)

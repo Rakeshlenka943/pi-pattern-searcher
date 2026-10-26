@@ -94,7 +94,14 @@ def tune(hw: HardwareProfile | None = None, force: bool = False) -> TuneConfig:
 
     cfg = prior(hw)
 
-    candidates = ["gmpy2", "mpmath"]
+    candidates = []
+    try:
+        from .c_ext import build as _cext_build
+        if _cext_build.is_available():
+            candidates.append("c_ext")
+    except Exception:
+        pass
+    candidates += ["gmpy2", "mpmath"]
     results: dict[str, float] = {}
     for b in candidates:
         t = _benchmark(b)
