@@ -18,11 +18,6 @@ Self-tuning · Cross-platform · Benchmarks your CPU before it searches a single
 ![Algorithms](https://img.shields.io/badge/search-KMP%20%7C%20Rabin--Karp%20%7C%20naive-8b5cf6)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 <br/>
-[![tests](https://github.com/Rakeshlenka943/pi-pattern-searcher/actions/workflows/test.yml/badge.svg)](https://github.com/Rakeshlenka943/pi-pattern-searcher/actions/workflows/test.yml)
-![Last commit](https://img.shields.io/github/last-commit/Rakeshlenka943/pi-pattern-searcher?color=informational)
-![Stars](https://img.shields.io/github/stars/Rakeshlenka943/pi-pattern-searcher?style=flat&color=yellow)
-
-<br/>
 
 [**🚀 Try it in your browser**](https://codespaces.new/Rakeshlenka943/pi-pattern-searcher)
 ·
